@@ -5,7 +5,8 @@
     "keywords": ["silverstripe", "gridfield", "has_one", "cos"],
     "require": {
         "php": ">=5.3.3",
-        "silverstripe/framework": "^3"
+        "silverstripe/framework": "~3.0"
+        "symbiote/silverstripe-gridfieldextensions": "~2.0"
     },
     "license": "MIT",
     "authors": [
