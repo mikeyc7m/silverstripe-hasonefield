@@ -1,0 +1,59 @@
+.gridfield-has-one .ss-gridfield-item.ss-gridfield-no-items {
+  display: none;
+}
+
+.gridfield-has-one legend {
+  padding: 0px;
+  font-size: 16.8px;
+  line-height: 24px;
+}
+
+.gridfield-has-one a.ss-ui-button.new-link {
+  height: 30px;
+}
+
+.gridfield-has-one a.ss-ui-button.new-link span.ui-button-text {
+  line-height: 21px;
+}
+
+.gridfield-has-one .ss-gridfield .add-existing-autocompleter:before {
+  content: "- OR -";
+  float: left;
+  line-height: 34px;
+  margin: 0 12px 0 4px;
+  font-size: 10px;
+  color: #98a9b6;
+}
+
+.gridfield-has-one
+  .ss-gridfield
+  .add-existing-autocompleter
+  input.relation-search {
+  width: 320px;
+}
+
+.gridfield-has-one table.ss-gridfield-table {
+  width: unset;
+  min-width: 696px;
+}
+
+.gridfield-has-one table.ss-gridfield-table tbody tr.last td {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.gridfield-has-one
+  table.ss-gridfield-table
+  tr.ss-gridfield-title-header
+  th.main {
+  font-weight: normal;
+}
+
+.gridfield-has-one .ss-gridfield-table .col-ID,
+.gridfield-has-one .ss-gridfield-table .col-action_SetOrderID {
+  width: 28px;
+}
+
+.gridfield-has-one .ss-gridfield-table .col-PublicID,
+.gridfield-has-one .ss-gridfield-table .col-action_SetOrderPublicID {
+  width: 75px;
+}
