@@ -9,7 +9,7 @@ class GridFieldAddExistingHasOneAutocompleter extends GridFieldAddExistingAutoco
     /**
      * @var string $resultsFormat The title used to render the search results.
      */
-    protected $resultsFormat = '$CMSTitle';
+    protected $resultsFormat = '#$ID | $Title';
 
     protected $instance = null;
 
