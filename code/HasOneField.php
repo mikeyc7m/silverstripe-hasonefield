@@ -1,13 +1,12 @@
 <?php
 
-/***
+/**
  * HasOneField is a tidy way to display & manipulate a has_one relationship. Includes Create, Edit, Unlink, Delete, and
  * a search feature to Link to existing items.
  *
  * Example Usage: $field = new HasOneField($this, 'MyRelation', 'My Related Field');
  *
  * @author Michael Caruana
- *
  */
 class HasOneField extends CompositeField
 {

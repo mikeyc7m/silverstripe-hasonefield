@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * This class is a {@link DataList} extended to manipulate objects in a has_one relation.
+ */
 class GridFieldRelationHasOneList extends DataList
 {
 

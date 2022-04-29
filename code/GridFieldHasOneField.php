@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * This class is a {@link GridField} responsible for managing a has_one relation.
+ */
 class GridFieldHasOneField extends GridField
 {
 
