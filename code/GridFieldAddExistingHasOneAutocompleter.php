@@ -52,7 +52,7 @@ class GridFieldAddExistingHasOneAutocompleter
     /**
      * @var string SSViewer template to render the results presentation
      */
-    protected $resultsFormat = '$CMSTitle';
+    protected $resultsFormat = '#$ID | $Title';
 
     /**
      * @var string Text shown on the search field, instructing what to search for.
