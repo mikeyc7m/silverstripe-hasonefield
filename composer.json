@@ -1,0 +1,17 @@
+{
+    "name": "michael.caruana/hasonefield",
+    "description": "Easy to manage has_one relations with familiar link/unlink feature.",
+    "type": "silverstripe-module",
+    "keywords": ["silverstripe", "gridfield", "has_one", "cos"],
+    "require": {
+        "php": ">=5.3.3",
+        "silverstripe/framework": "^3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Caruana",
+            "email": "mikeyc7m@gmail.com"
+        }
+    ]
+}
