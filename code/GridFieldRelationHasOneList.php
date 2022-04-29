@@ -7,11 +7,6 @@ class GridFieldRelationHasOneList extends DataList
     protected $name;
     protected $parent;
 
-    /**
-     * @param $record DataObject The related object.
-     * @param $name String The name of the field relation, minus the "ID" bit.
-     * @param $parent DataObject The parent object.
-     */
     public function __construct($record, string $name, DataObject $parent)
     {
         $this->record = $record;

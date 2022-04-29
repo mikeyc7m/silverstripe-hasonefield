@@ -8,11 +8,6 @@ class GridFieldHasOneField extends GridField
     protected $relation;
     private $displayFields;
 
-    /**
-     * @param $name String The relation/name of the field.
-     * @param $title String The custom title of the field.
-     * @param $parent DataObject The parent DataObject for whom this Gridfield exists.
-     */
     public function __construct($parent, $name, $title = '')
     {
         $this->relation = $name;

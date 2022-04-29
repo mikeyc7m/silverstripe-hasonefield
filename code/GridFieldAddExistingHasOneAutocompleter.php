@@ -3,74 +3,16 @@
 /**
  * This class is a {@link GridField} component responsible for adding an existing object to a has_one relation.
  */
-class GridFieldAddExistingHasOneAutocompleter
-    implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
+class GridFieldAddExistingHasOneAutocompleter extends GridFieldAddExistingAutocompleter
 {
 
     /**
-     * Which template to use for rendering
-     *
-     * @var string $itemClass
+     * @var string $resultsFormat The title used to render the search results.
      */
-    protected $itemClass = 'GridFieldAddExistingAutocompleter';
-
-    /**
-     * The HTML fragment to write this component into
-     */
-    protected $targetFragment;
-
-    /**
-     * @var SS_List
-     */
-    protected $searchList;
-
-    /**
-     * Define column names which should be included in the search.
-     * By default, they're searched with a {@link StartsWithFilter}.
-     * To define custom filters, use the same notation as {@link DataList->filter()},
-     * e.g. "Name:EndsWith".
-     *
-     * If multiple fields are provided, the filtering is performed non-exclusive.
-     * If no fields are provided, tries to auto-detect fields from
-     * {@link DataObject->searchableFields()}.
-     *
-     * The fields support "dot-notation" for relationships, e.g.
-     * a entry called "Team.Name" will search through the names of
-     * a "Team" relationship.
-     *
-     * @example
-     *  array(
-     *    'Name',
-     *    'Email:StartsWith',
-     *    'Team.Name'
-     *  )
-     *
-     * @var array
-     */
-    protected $searchFields = array();
-
-    /**
-     * @var string SSViewer template to render the results presentation
-     */
-    protected $resultsFormat = '#$ID | $Title';
-
-    /**
-     * @var string Text shown on the search field, instructing what to search for.
-     */
-    protected $placeholderText;
-
-    /**
-     * @var int
-     */
-    protected $resultsLimit = 20;
-
+    protected $resultsFormat = '$CMSTitle';
 
     protected $instance = null;
 
-    /**
-     *
-     * @param array $searchFields Which fields on the object in the list should be searched
-     */
     public function __construct(DataObject $instance, $targetFragment = 'before', $searchFields = null)
     {
         $this->targetFragment = $targetFragment;
@@ -79,168 +21,19 @@ class GridFieldAddExistingHasOneAutocompleter
     }
 
     /**
-     *
-     * @param GridField $gridField
-     * @return string[] - HTML
-     */
-    public function getHTMLFragments($gridField)
-    {
-        $dataClass = $gridField->getList()->dataClass();
-
-        $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new FieldList();
-
-        $searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"));
-
-        $searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
-        $searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
-        $searchField->addExtraClass('relation-search no-change-track action_gridfield_relationsearch');
-
-        $findAction = new GridField_FormAction($gridField, 'gridfield_relationfind',
-            _t('GridField.Find', "Find"), 'find', 'find');
-        $findAction->setAttribute('data-icon', 'relationfind');
-        $findAction->addExtraClass('action_gridfield_relationfind');
-
-        $addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
-            _t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
-        $addAction->setAttribute('data-icon', 'chain--plus');
-        $addAction->addExtraClass('action_gridfield_relationadd');
-
-        // If an object is not found, disable the action
-        if (!is_int($gridField->State->GridFieldAddRelation(null))) {
-            $addAction->setReadonly(true);
-        }
-
-        $forTemplate->Fields->push($searchField);
-        $forTemplate->Fields->push($findAction);
-        $forTemplate->Fields->push($addAction);
-        if ($form = $gridField->getForm()) {
-            $forTemplate->Fields->setForm($form);
-        }
-
-        return array(
-            $this->targetFragment => $forTemplate->renderWith($this->itemClass)
-        );
-    }
-
-    /**
-     * @param string $dataClass The class of the object being searched for
-     *
-     * @return string
-     */
-    public function getPlaceholderText($dataClass)
-    {
-        $searchFields = ($this->getSearchFields())
-            ? $this->getSearchFields()
-            : $this->scaffoldSearchFields($dataClass);
-
-        if ($this->placeholderText) {
-            return $this->placeholderText;
-        } else {
-            $labels = array();
-            if ($searchFields) {
-                foreach ($searchFields as $searchField) {
-                    $searchField = explode(':', $searchField);
-                    $label = singleton($dataClass)->fieldLabel($searchField[0]);
-                    if ($label) {
-                        $labels[] = $label;
-                    }
-                }
-            }
-            if ($labels) {
-                return _t(
-                    'GridField.PlaceHolderWithLabelsX',
-                    'Find by {name}',
-                    array('type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels))
-                );
-            } else {
-                return _t(
-                    'GridField.PlaceHolder', 'Find {type}',
-                    array('type' => singleton($dataClass)->i18n_plural_name())
-                );
-            }
-        }
-    }
-
-    /**
-     * @param string $text
-     *
-     * @return $this
-     */
-    public function setPlaceholderText($text)
-    {
-        $this->placeholderText = $text;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSearchFields()
-    {
-        return $this->searchFields;
-    }
-
-    /**
-     * @param array $fields
-     */
-    public function setSearchFields($fields)
-    {
-        $this->searchFields = $fields;
-        return $this;
-    }
-
-    /**
      * Detect searchable fields and searchable relations.
      * Falls back to {@link DataObject->summaryFields()} if
      * no custom search fields are defined.
      *
      * @param string $dataClass the class name
-     * @return array|null names of the searchable fields
+     * @return array names of the searchable fields
      */
-    public function scaffoldSearchFields($dataClass)
+    public function scaffoldSearchFields($dataClass): array
     {
-        $obj = singleton($dataClass);
-        $fields = null;
-        if ($fieldSpecs = $obj->searchableFields()) {
-            $customSearchableFields = $obj->stat('searchable_fields');
-            foreach ($fieldSpecs as $name => $spec) {
-                if (is_array($spec) && array_key_exists('filter', $spec)) {
-                    // The searchableFields() spec defaults to PartialMatch,
-                    // so we need to check the original setting.
-                    // If the field is defined $searchable_fields = array('MyField'),
-                    // then default to StartsWith filter, which makes more sense in this context.
-                    if (!$customSearchableFields || array_search($name, $customSearchableFields)) {
-                        $filter = 'StartsWith';
-                    } else {
-                        $filter = preg_replace('/Filter$/', '', $spec['filter']);
-                    }
-                    $fields[] = "{$name}:{$filter}";
-                } else {
-                    $fields[] = $name;
-                }
-            }
-        }
-        if (is_null($fields)) {
-            if ($obj->hasDatabaseField('Title')) {
-                $fields = array('Title');
-            } elseif ($obj->hasDatabaseField('Name')) {
-                $fields = array('Name');
-            }
-        }
-        array_unshift($fields, "ID"); // always allow search by ID
-
+        $fields = parent::scaffoldSearchFields($dataClass);
+        unset($fields['ID:StartsWith']); // remove any ID lookup...
+        array_unshift($fields, "ID:ExactMatch"); // ...and always allow search by exact ID
         return $fields;
-    }
-
-    /**
-     *
-     * @param GridField $gridField
-     * @return array
-     */
-    public function getActions($gridField)
-    {
-        return array('addto');
     }
 
     /**
@@ -279,103 +72,9 @@ class GridFieldAddExistingHasOneAutocompleter
      * @param SS_List $dataList
      * @return SS_List
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, SS_List $dataList): SS_List
     {
         return $dataList;
-    }
-
-    /**
-     *
-     * @param GridField $gridField
-     * @return array
-     */
-    public function getURLHandlers($gridField)
-    {
-        return array(
-            'search' => 'doSearch',
-        );
-    }
-
-    /**
-     * Returns a json array of a search results that can be used by for example Jquery.ui.autosuggestion
-     *
-     * @param GridField $gridField
-     * @param SS_HTTPRequest $request
-     */
-    public function doSearch($gridField, $request)
-    {
-        $dataClass = $gridField->getList()->dataClass();
-        $allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
-
-        $searchFields = ($this->getSearchFields())
-            ? $this->getSearchFields()
-            : $this->scaffoldSearchFields($dataClass);
-        if (!$searchFields) {
-            throw new LogicException(
-                sprintf('GridFieldAddExistingAutocompleter: No searchable fields could be found for class "%s"',
-                    $dataClass));
-        }
-
-        $params = array();
-        foreach ($searchFields as $searchField) {
-            $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:StartsWith";
-            $params[$name] = $request->getVar('gridfield_relationsearch');
-        }
-        $results = $allList
-            ->subtract($gridField->getList())
-            ->filterAny($params)
-            ->sort(strtok($searchFields[0], ':'), 'ASC')
-            ->limit($this->getResultsLimit());
-
-        $json = array();
-        Config::nest();
-        Config::inst()->update('SSViewer', 'source_file_comments', false);
-        $viewer = SSViewer::fromString($this->resultsFormat);
-        foreach ($results as $result) {
-            $json[$result->ID] = html_entity_decode($viewer->process($result));
-        }
-        Config::unnest();
-        return Convert::array2json($json);
-    }
-
-    /**
-     * Gets the maximum number of autocomplete results to display.
-     *
-     * @return int
-     */
-    public function getResultsLimit()
-    {
-        return $this->resultsLimit;
-    }
-
-    /**
-     * @param int $limit
-     *
-     * @return $this
-     */
-    public function setResultsLimit($limit)
-    {
-        $this->resultsLimit = $limit;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResultsFormat()
-    {
-        return $this->resultsFormat;
-    }
-
-    /**
-     * @param string $format
-     *
-     * @return $this
-     */
-    public function setResultsFormat($format)
-    {
-        $this->resultsFormat = $format;
-        return $this;
     }
 
     /**
@@ -383,8 +82,9 @@ class GridFieldAddExistingHasOneAutocompleter
      * search.
      *
      * @param SS_List $list
+     * @return GridFieldAddExistingHasOneAutocompleter
      */
-    public function setSearchList(SS_List $list)
+    public function setSearchList(SS_List $list): GridFieldAddExistingHasOneAutocompleter
     {
         $this->searchList = $list;
         return $this;
