@@ -2,6 +2,9 @@
 
 /**
  * This class is a {@link GridField} responsible for managing a has_one relation.
+ *
+ * @package  michael.caruana/hasonefield
+ * @author  Michael Caruana <mikeyc7m@gmail.com>
  */
 class GridFieldHasOneField extends GridField
 {

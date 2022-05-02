@@ -2,6 +2,9 @@
 
 /**
  * This class is a {@link DataList} extended to manipulate objects in a has_one relation.
+ *
+ * @package  michael.caruana/hasonefield
+ * @author  Michael Caruana <mikeyc7m@gmail.com>
  */
 class GridFieldRelationHasOneList extends DataList
 {

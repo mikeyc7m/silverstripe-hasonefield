@@ -6,7 +6,8 @@
  *
  * Example Usage: $field = new HasOneField($this, 'MyRelation', 'My Related Field');
  *
- * @author Michael Caruana
+ * @package  michael.caruana/hasonefield
+ * @author  Michael Caruana <mikeyc7m@gmail.com>
  */
 class HasOneField extends CompositeField
 {

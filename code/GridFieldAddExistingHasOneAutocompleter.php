@@ -2,6 +2,9 @@
 
 /**
  * This class is a {@link GridField} component responsible for adding an existing object to a has_one relation.
+ *
+ * @package  michael.caruana/hasonefield
+ * @author  Michael Caruana <mikeyc7m@gmail.com>
  */
 class GridFieldAddExistingHasOneAutocompleter extends GridFieldAddExistingAutocompleter
 {
@@ -15,8 +18,7 @@ class GridFieldAddExistingHasOneAutocompleter extends GridFieldAddExistingAutoco
 
     public function __construct(DataObject $instance, $targetFragment = 'before', $searchFields = null)
     {
-        $this->targetFragment = $targetFragment;
-        $this->searchFields = (array)$searchFields;
+        parent::__construct($targetFragment, $searchFields);
         $this->instance = $instance;
     }
 
@@ -31,38 +33,34 @@ class GridFieldAddExistingHasOneAutocompleter extends GridFieldAddExistingAutoco
     public function scaffoldSearchFields($dataClass): array
     {
         $fields = parent::scaffoldSearchFields($dataClass);
-        unset($fields['ID:StartsWith']); // remove any ID lookup...
-        array_unshift($fields, "ID:ExactMatch"); // ...and always allow search by exact ID
+        // remove any ID lookup and always allow search by exact ID...
+        unset($fields['ID:StartsWith']);
+        array_unshift($fields, "ID:ExactMatch");
         return $fields;
     }
 
     /**
-     * Manipulate the state to add a new relation, and add the actual item.
+     * Add the item, don't bother manipulating state.
      *
      * @param GridField $gridField
      * @param string $actionName Action identifier, see {@link getActions()}.
      * @param array $arguments Arguments relevant for this
      * @param array $data All form data
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, $actionName, $arguments, $data): void
     {
-        switch ($actionName) {
-            case 'addto':
-                if (isset($data['relationID']) && $data['relationID']) {
-                    $gridField->State->GridFieldAddRelation = $data['relationID'];
-
-                    $objectID = $gridField->State->GridFieldAddRelation(null);
-                    if (empty($objectID)) {
-                        return;
-                    }
-                    $dataList = $gridField->getList();
-                    $object = DataObject::get_by_id($dataList->dataclass(), $objectID);
-                    if ($object) {
-                        $dataList->add($object);
-                    }
-                    $gridField->State->GridFieldAddRelation = null;
+        if ($actionName == 'addto') {
+            if (isset($data['relationID']) && $data['relationID']) {
+                $objectID = (int)$data['relationID'];
+                if (empty($objectID)) {
+                    return;
                 }
-                break;
+                $dataList = $gridField->getList();
+                $object = DataObject::get_by_id($dataList->dataclass(), $objectID);
+                if ($object) {
+                    $dataList->add($object);
+                }
+            }
         }
     }
 

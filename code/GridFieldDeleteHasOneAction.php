@@ -2,6 +2,9 @@
 
 /**
  * This class is a {@link GridField} component that adds a delete/unlink action for HasOne objects.
+ * 
+ * @package  michael.caruana/hasonefield
+ * @author  Michael Caruana <mikeyc7m@gmail.com>
  */
 class GridFieldDeleteHasOneAction extends GridFieldDeleteAction
 {
@@ -15,6 +18,7 @@ class GridFieldDeleteHasOneAction extends GridFieldDeleteAction
     }
 
     /**
+     * Add the delete/unlink buttons to a GridField row
      *
      * @param GridField $gridField
      * @param DataObject $record
