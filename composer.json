@@ -1,18 +1,18 @@
 {
-    "name": "michael.caruana/hasonefield",
-    "description": "Easy to manage has_one relations with familiar link/unlink feature.",
-    "type": "silverstripe-module",
-    "keywords": ["silverstripe", "gridfield", "has_one"],
-    "require": {
-        "php": ">=5.3.3",
-        "silverstripe/framework": "~3.0"
-        "symbiote/silverstripe-gridfieldextensions": "~2.0"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Michael Caruana",
-            "email": "mikeyc7m@gmail.com"
-        }
-    ]
+  "name": "michael.caruana/hasonefield",
+  "description": "Easy to manage has_one relations with familiar link/unlink feature.",
+  "type": "silverstripe-module",
+  "keywords": ["silverstripe", "gridfield", "has_one"],
+  "require": {
+    "php": ">=5.3.3",
+    "silverstripe/framework": "~3.0",
+    "symbiote/silverstripe-gridfieldextensions": "~2.0"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Michael Caruana",
+      "email": "mikeyc7m@gmail.com"
+    }
+  ]
 }
